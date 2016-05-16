@@ -26,5 +26,5 @@ if [[ "$script_type" == "up" ]]; then
     $IPTABLES -t nat -A POSTROUTING -s ${ifconfig_local}/${ifconfig_netmask} -o eth0 -j MASQUERADE
 
     # NAT traffic going to the VPN clients
-    # $IPTABLES -t nat -A POSTROUTING -d ${ifconfig_local}/${ifconfig_netmask} -o ${dev} -j MASQUERADE
+    $IPTABLES -t nat -A POSTROUTING -d ${ifconfig_local}/${ifconfig_netmask} -o ${dev} -j MASQUERADE
 fi
