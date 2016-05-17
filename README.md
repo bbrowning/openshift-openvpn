@@ -81,15 +81,14 @@ Copy the text starting from the `-----BEGIN CERTIFICATE-----` line up
 to and including the `-----END CERTIFICATE-----` line to a file
 locally called `openvpn-ca.crt`. If you're running a recent Fedora
 with SELinux enabled and want to use NetworkManager as your OpenVPN
-client, then you'll also need a few additional commands:
+client, then you'll also need to save the file as
+`~/.cert/openvpn-ca.crt` and then run:
 
-    semanage fcontext -a -t home_cert_t openvpn-ca.crt
-    restorecon -R -v openvpn-ca.crt
+    restorecon -R -v ~/.cert
 
 
 **Use port-forwarding to access the OpenVPN server:**
 
-    oc get pods -l app=openvpn-server
     oc port-forward openvpn-server-YOUR-PODS-NAME 1194
 
 
@@ -99,11 +98,12 @@ On modern Linux distros, you should be able to use NetworkManager to
 connect. You may need the `NetworkManager-openvpn-gnome` package first.
 
 Create a new OpenVPN connection, using `localhost` as the gateway,
-password as the auth type and `foo` / `bar` as the username and
-password combination (unless you changed it when deploying the VPN
-server) and select your `openvpn-ca.crt` as the CA Certificate. Under
-the IPv4 settings be sure to check `Use this connection only for
-resources on its network`.
+`TCP` instead of UDP (under Advanced settings in Fedora's
+NetworkManager), password as the auth type and `foo` / `bar` as the
+username and password combination (unless you changed it when
+deploying the VPN server) and select your `openvpn-ca.crt` as the CA
+Certificate. Under the IPv4 settings be sure to check `Use this
+connection only for resources on its network`.
 
 You can also connect manually with an OpenVPN client, but this method
 doesn't automatically update /etc/resolv.conf and thus DNS service
