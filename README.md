@@ -34,6 +34,22 @@ locally or in some shared development environment.
   IDE). You can get them via a command like `oc exec
   openvpn-server-2-0b90a env | grep -E '_PORT|_HOST'`
 
+**What isn't tested yet**
+
+- Windows and Mac OpenVPN clients - test and report back please!
+
+**What doesn't work**
+
+- Pinging hosts inside OpenShift from your local machine - stick to
+  using curl or similar to verify communication with other services
+
+- OpenVPN Certificate management - right now we generate new CA and
+  server certificates when building the Docker image. This is why the
+  instructions have you building the image in your OpenShift instead
+  of pulling a published image. It would be possible via Secrets or
+  other mechanisms to supply certificates, but this is a development
+  tool and ease-of-use was chosen first.
+
 ## Example Usage
 
 This example assumes you're using the Red Hat Developers
