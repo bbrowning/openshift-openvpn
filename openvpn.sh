@@ -25,6 +25,8 @@ if [ "x$OPENVPN_USER" == "x" -o "x$OPENVPN_PASS" == "x" ]; then
     exit 1
 fi
 
+echo -e "$OPENVPN_USER\n$OPENVPN_PASS" > openvpn_creds
+
 KUBE_SERVICE_NETWORK=`echo $KUBERNETES_SERVICE_HOST | awk -F . '{print $1"."$2".0.0"}'`
 SEARCH_DOMAINS=`grep search /etc/resolv.conf | xargs -n 1 | grep -v "^search$" | xargs -n 1 -I '{}' echo '--push dhcp-option DOMAIN {}'`
 DNS_SERVER=`grep nameserver /etc/resolv.conf | head -n 1 | xargs -n 1 | grep -v "^nameserver$"`
