@@ -17,19 +17,13 @@ set -e
 KEY_DIR=${OPENVPN_DIR}/easy-rsa/keys
 CA_CRT=${KEY_DIR}/ca.crt
 
-# Moved to Dockerfile to run when image gets built for now
-# if [ ! -f $CA_CRT ]; then
-#     pushd ${OPENVPN_DIR}/easy-rsa
-#     . ./vars
-#     ./clean-all
-#     ./pkitool --batch --initca
-#     ./pkitool --batch --server server
-#     ./build-dh
-#     popd
-# fi
-
 echo -e "\n\nSave this CA certificate to a file for use in your VPN client\n"
 cat $CA_CRT
+
+if [ "x$OPENVPN_USER" == "x" -o "x$OPENVPN_PASS" == "x" ]; then
+    echo "Error: OPENVPN_USER and OPENVPN_PASS environment variables must be set"
+    exit 1
+fi
 
 KUBE_SERVICE_NETWORK=`echo $KUBERNETES_SERVICE_HOST | awk -F . '{print $1"."$2".0.0"}'`
 SEARCH_DOMAINS=`grep search /etc/resolv.conf | xargs -n 1 | grep -v "^search$" | xargs -n 1 -I '{}' echo '--push dhcp-option DOMAIN {}'`
