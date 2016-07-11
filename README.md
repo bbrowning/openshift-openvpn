@@ -147,14 +147,28 @@ To test DNS resolution, curl one of the helloworld-msa apps as well:
 
 **Redirect a service's traffic into our local proxy**
 
-Run the service you want to develop locally, listening on the same
-port your OpenShift application does (probably 8080) and using 0.0.0.0
-or the OpenVPN client's IP as your listening interface. Then, use the
-following commands to redirect all traffic for that service through
-the OpenVPN server and down to your local machine:
+Continuing with our HelloWorld-MSA example, let's pretend we want to
+develop the Olá service locally. First, run the service you want to
+develop locally, listening on the same port your OpenShift application
+does (probably 8080) and using 0.0.0.0 or the OpenVPN client's IP as
+your listening interface.
 
-    oc export svc/namaste -o json > service_backup.json
-    oc patch svc/namaste -p '{"spec": {"selector": {"$patch": "replace", "app": "openvpn-server"}}}'
+    java -jar ola/target/ola.jar
+
+Make sure you are still connected to your OpenShift OpenVPN and then
+use the following commands to redirect all traffic for that service
+through the OpenVPN server and down to your local machine, making sure
+to replace the service name (`ola` in this example) with the name of
+your actual service:
+
+    oc export svc/ola -o json > service_backup.json
+    oc patch svc/ola -p '{"spec": {"selector": {"$patch": "replace", "app": "openvpn-server"}}}'
+
+Now if you refresh the HelloWorld-MSA frontend, you'll see the Olá now
+lists your local machine's hostname in its output. Your browser as
+well as the other services are transparently redirected to the service
+running directly on your laptop instead of the one running inside
+OpenShift.
 
 
 **Switch from the proxy back to the real service**
@@ -164,6 +178,9 @@ OpenShift again, just replace its definition with the backup we
 created earlier.
 
     oc replace --force -f service_backup.json
+
+Refresh the HelloWorld-MSA frontend and you'll see the Olá instance
+from OpenShift is being used once again.
 
 ## Subsequent Usage
 
