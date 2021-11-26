@@ -1,10 +1,10 @@
-FROM openshift/base-centos7
+FROM docker.io/openshift/base-centos7
 
-MAINTAINER Ben Browning <bbrownin@redhat.com>
+MAINTAINER Ivan Zelenov <izelenov@bcc.ru>
 
 EXPOSE 8080/tcp
 
-RUN yum install -y openvpn easy-rsa
+RUN yum update -y && yum install -y epel-release && yum install -y openvpn easy-rsa
 
 ENV OPENVPN_DIR=/opt/openvpn
 
